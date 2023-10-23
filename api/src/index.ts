@@ -5,7 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 
 import swaggerDocument from './config/swagger.json';
 
-import ticketsRouter from './router';
+import ticketsRouter from './router/ticket';
 
 import { write } from './utils/log';
 import { drawInterval } from './emitter/gamesEmitter';
