@@ -1,0 +1,15 @@
+FROM node:18.18.2-alpine3.18
+
+RUN apk --update add tzdata &&\ 
+    cp /usr/share/zoneinfo/Asia/Hong_Kong /etc/localtime &&\
+    echo "Asia/Hong_Kong" > /etc/timezone &&\
+    apk del tzdata
+
+WORKDIR /usr/src/app
+COPY . .
+
+RUN yarn install
+RUN yarn build
+
+CMD ["sh", "-c", "yarn serve"]
+

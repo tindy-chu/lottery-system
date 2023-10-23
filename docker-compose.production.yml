@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  api:
+    image: lottery-system-api
+    links:
+      - postgres
+    build:
+      context: ./api/
+      dockerfile: Dockerfile.production
+    ports:
+      - ${LOTTERY_API_PORT}:${LOTTERY_API_PORT}
+    volumes:
+      - ./log/api:/usr/src/log
+    environment:
+      - PORT=${LOTTERY_API_PORT}
+      - DB_USER=${LOTTERY_DB_USER}
+      - DB_PASSWORD=${LOTTERY_DB_PASSWORD}
+      - DB_NAME=${LOTTERY_DB_NAME}
+
+  postgres:
+    image: postgres:16.0-alpine3.18
+    restart: always
+    environment:
+      TZ: Asia/Hong_Kong
+      POSTGRES_USER: ${LOTTERY_DB_USER}
+      POSTGRES_PASSWORD: ${LOTTERY_DB_PASSWORD}
+      POSTGRES_DB: ${LOTTERY_DB_NAME}
+    volumes:
+      - ./db:/var/lib/postgresql/data
+      - ./config/init.sql:/docker-entrypoint-initdb.d/create_tables.sql

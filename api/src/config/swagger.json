@@ -1,0 +1,103 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Lottery System API",
+    "version": "0.0.1"
+  },
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/tickets": {
+      "post": {
+        "summary": "Add ticket",
+        "operationId": "AddTicket",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/addTicketResponse"
+            }
+          }
+        },
+        "tags": [
+          "Tickets"
+        ]
+      }
+    },
+    "/tickets/{code}/notification": {
+      "get": {
+        "summary": "Get notification for a specific ticket by Server-sent Event (enable real-time updates)",
+        "operationId": "GetTicketNotification",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "[0-9a-fA-F]{32}",
+            "description": "Unique ticket code"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/ticketNotificationResponse"
+            }
+          },
+          "400": {
+            "description": "The ticket code is wrong"
+          }
+        },
+        "tags": [
+          "Tickets"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "addTicketResponse": {
+      "type": "object",
+      "properties": {
+        "gameId": {
+          "type": "integer",
+          "description": "The game identifier that the ticket belong to."
+        },
+        "code": {
+          "type": "string",
+          "pattern": "[0-9a-fA-F]{32}",
+          "description": "The unique code for the ticket."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date and time the ticket was created."
+        }
+      }
+    },
+    "ticketNotificationResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "won",
+            "lost"
+          ],
+          "description": "The status of the ticket."
+        },
+        "gameId": {
+          "type": "integer",
+          "description": "The game identifier that the ticket belong to."
+        }
+      }
+    }
+  }
+}
