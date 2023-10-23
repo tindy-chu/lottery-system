@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { createTicket, notification } from '../../handler/ticket';
-import headerMiddleware from '../../middleware/header';
+import { createTicket, notification } from '../handler/ticket';
+import headerMiddleware from '../middleware/header';
 
 const ticketsRouter = Router();
 

@@ -14,6 +14,7 @@ services:
       - ./log/api:/usr/src/log
     environment:
       - PORT=${LOTTERY_API_PORT}
+      - GAME_MILLISECOND=${LOTTERY_API_GAME_MILLISECOND}
       - DB_USER=${LOTTERY_DB_USER}
       - DB_PASSWORD=${LOTTERY_DB_PASSWORD}
       - DB_NAME=${LOTTERY_DB_NAME}
