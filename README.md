@@ -1,5 +1,40 @@
 # Lottery system
 
+```mermaid
+sequenceDiagram
+    Backend->>+LoginRadius: getProfile(caId)
+    LoginRadius-->>Backend: profile
+    Backend->>LoginRadius: getCustomObject(profile.id)
+    LoginRadius-->>-Backend: customObject
+    Backend->>Backend: extract bpList
+
+    Backend->>Backend: first = new Array()
+    loop bp
+        Backend->>+SAP: Z_BAPI_GET_CA_ACCT_BY_BP(bp)
+        SAP-->>Backend: caAccount
+        Backend->>SAP: Z_BAPI_GET_CA_ASSOCIATE(caAccount.id)
+        SAP-->>Backend: caAssociateList
+        loop caAssociate
+            Backend->>SAP: GET_ACCTINFO(caAssociate.id)
+            SAP-->>Backend: acctInfo as a
+            Backend->>SAP: GET_ADD_SRV(caAssociate.id)
+            SAP-->>Backend: srv as b
+            Backend->>SAP: GET_OUTSTANDING_AMOUNT(caAssociate.id)
+            SAP-->>Backend: outstandingAmount as c
+            Backend->>SAP: BILLPAY_HIST_DATE_GETDEPOSIT(caAssociate.id)
+            SAP-->>Backend: billpay as d
+            Backend->>SAP: GETDEPOSIT(caAssociate.id)
+            SAP-->>Backend: deposit as e
+        end
+        Backend->>Backend: first.push({a,b,c,d,e})
+    end
+    Backend->>SAP: MOVEOUT_History(caId)
+    SAP-->>Backend: moveOutHistory as second
+    Backend->>SAP: MOVEIN_History(caId)
+    SAP-->>-Backend: moveInHistory as third
+    Backend->>Backend: sortArray(first,second,third)
+```
+
 In this system, a RESTful API server, we are selling tickets and perform the draws continuously and periodically.
 
 After the previous draw, contestants can start to participate in the next draw.
